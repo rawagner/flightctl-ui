@@ -54,7 +54,7 @@ func createReverseProxy(apiURL string) (*url.URL, *httputil.ReverseProxy) {
 			log.Warnf("Failed to get session cookie: %s", err.Error())
 		}
 		if cookie != nil {
-			r.Header.Add("Authorization", "Bearer "+cookie.Value)
+			r.Header.Add(common.AuthHeaderKey, "Bearer "+cookie.Value)
 		}
 	}
 	return target, proxy
