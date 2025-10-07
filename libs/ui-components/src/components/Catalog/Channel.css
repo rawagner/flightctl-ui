@@ -1,0 +1,116 @@
+.co-channel {
+  align-items: center;
+  display: flex;
+}
+
+.co-channel-line {
+  align-items: center;
+  display: flex;
+  height:  60px;
+  justify-content: center;
+  position: relative;
+  min-width: 50px;
+  width: 100%;
+}
+
+.co-channel-line--current {
+    background-color: #06c;
+}
+
+.co-channel-line::before {
+    background-color: #06c;
+    content: '';
+    height: 4px;
+    position: absolute;
+    width: 100%;
+}
+
+.co-channel-line-last::after {
+    background: transparent;
+    border: 8px solid transparent;
+    border-left-color: #06c;
+    border-width: 8px 12px;
+    content: '';
+    position: absolute;
+    right: -15px;
+}
+
+.co-channel-start::before {
+  position: absolute;
+  right: 0;
+  width: 25%;
+}
+
+.co-channel-name {
+  color: var(--pf-v5-global--disabled-color--100);
+  padding: 0 10px 0 20px;
+  min-width: 150px;
+  white-space: nowrap;
+}
+
+.co-channel-name--current {
+    color: inherit;
+    padding-top: 20px;
+}
+
+.co-channel-path {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+
+.co-channel-path--current {
+  margin-top: 20px;
+}
+
+.co-cluster-settings__updates-graph {
+  border-width: 1px;
+  max-width: 800px;
+  padding: 0 var(--pf-v5-global--spacer--lg) 0 0;
+}
+
+.co-channel-version {
+  display: flex;
+  flex-direction: column;
+  height: 35px;
+  justify-content: flex-end;
+  line-height: 1;
+  padding: 0 5px;
+  position: absolute;
+  text-align: center;
+  top: -20px;
+  word-break: break-word;
+}
+
+.co-channel-version--current {
+    font-weight: bold;
+}
+
+.co-channel-version-dot {
+  background: #06c !important;
+  border-radius: 16px !important;
+  height: 16px !important;
+  padding: 0 !important;
+  position: absolute;
+  width: 16px !important;
+  z-index: 2;
+}
+
+.co-channel-version-dot::after {
+    background: #fff !important;
+    border: 2px solid #fff !important;
+    border-radius: 12px !important;
+    bottom: 2px !important;
+    content: '';
+    left: 2px !important;
+    position: absolute;
+    right: 2px !important;
+    top: 2px !important;
+}
+
+.co-channel-version-dot--current::after {
+    background: transparent !important;
+}

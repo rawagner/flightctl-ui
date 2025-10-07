@@ -9,6 +9,7 @@ import { AuthContext, useAuthContext } from './context/AuthContext';
 import '@patternfly/react-core/dist/styles/base.css';
 import '@patternfly/react-styles/css/utilities/Spacing/spacing.css';
 import '@patternfly/react-styles/css/utilities/Text/text.css';
+import '@patternfly/react-catalog-view-extension/dist/css/react-catalog-view-extension.css';
 
 import './app.css';
 

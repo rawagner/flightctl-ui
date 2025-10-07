@@ -84,6 +84,8 @@ func main() {
 		apiRouter.HandleFunc("/config", configHandler.GetConfig)
 	}
 
+	apiRouter.Handle("/catalog/{forward:.*}", bridge.NewCatalogHandler(tlsConfig))
+
 	spa := server.SpaHandler{}
 	router.PathPrefix("/").Handler(server.GzipHandler(spa))
 

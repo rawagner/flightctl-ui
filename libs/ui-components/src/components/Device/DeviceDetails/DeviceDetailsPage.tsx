@@ -32,6 +32,7 @@ import PageWithPermissions from '../../common/PageWithPermissions';
 import YamlEditor from '../../common/CodeEditor/YamlEditor';
 import DeviceAliasEdit from './DeviceAliasEdit';
 import { SystemRestoreBanners } from '../../SystemRestore/SystemRestoreBanners';
+import DeviceCatalogTab from './DeviceCatalogTab';
 
 type DeviceDetailsPageProps = React.PropsWithChildren<{ hideTerminal?: boolean }>;
 
@@ -144,6 +145,7 @@ const DeviceDetailsPage = ({ children, hideTerminal }: DeviceDetailsPageProps) =
         <Nav variant="tertiary">
           <NavList>
             <NavItem to="details">{t('Details')}</NavItem>
+            <NavItem to="catalog">{t('Catalog')}</NavItem>
             <NavItem to="yaml">{t('YAML')}</NavItem>
             {!hideTerminal && canOpenTerminal && <NavItem to="terminal">{t('Terminal')}</NavItem>}
             <NavItem to="events">{t('Events')}</NavItem>
@@ -178,6 +180,7 @@ const DeviceDetailsPage = ({ children, hideTerminal }: DeviceDetailsPageProps) =
       {device && (
         <Routes>
           <Route index element={<Navigate to="details" replace />} />
+          <Route path="catalog" element={<DeviceCatalogTab device={device} refetch={refetch} />} />
           <Route
             path="details"
             element={

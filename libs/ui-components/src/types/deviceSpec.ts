@@ -62,6 +62,10 @@ export type InlineAppForm = AppBase & {
 
 export type ImageAppForm = AppBase & {
   image: string;
+  ociVolume?: {
+    name: string;
+    ociArtifact: string;
+  };
 };
 
 export const isGitConfigTemplate = (configTemplate: ConfigTemplate): configTemplate is GitConfigTemplate =>

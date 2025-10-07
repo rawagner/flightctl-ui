@@ -34,6 +34,7 @@ export const appRoutes = {
   [ROUTE.ENROLLMENT_REQUESTS]: '/devicemanagement/enrollmentrequests',
   [ROUTE.ENROLLMENT_REQUEST_DETAILS]: '/devicemanagement/enrollmentrequests',
   [ROUTE.COMMAND_LINE_TOOLS]: '/command-line-tools',
+  [ROUTE.CATALOG]: '/devicemanagement/catalog',
 };
 
 export type NavLinkFC = React.FC<{ to: string; children: (props: { isActive: boolean }) => React.ReactNode }>;

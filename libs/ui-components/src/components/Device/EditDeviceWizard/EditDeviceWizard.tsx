@@ -74,6 +74,7 @@ const EditDeviceWizard = () => {
   } else if (device) {
     const registerMicroShift = hasMicroshiftRegistrationConfig(device.spec);
     const updatePolicyValues = getUpdatePolicyValues(device.spec?.updatePolicy);
+
     body = (
       <Formik<EditDeviceFormValues>
         initialValues={{

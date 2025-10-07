@@ -59,6 +59,7 @@ const appRoutes = {
   [ROUTE.ENROLLMENT_REQUESTS]: '/edge/enrollmentrequests',
   [ROUTE.ENROLLMENT_REQUEST_DETAILS]: '/edge/enrollmentrequests',
   [ROUTE.COMMAND_LINE_TOOLS]: '/', // CLI downloads are shown embedded in OCP's CLI downloads page and not as an independent route
+  [ROUTE.CATALOG]: '/edge/catalog',
 };
 
 export const useValuesAppContext = (): AppContextProps => {

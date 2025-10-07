@@ -76,6 +76,16 @@ func NewAlertManagerHandler(tlsConfig *tls.Config) handler {
 	return handler{target: target, proxy: proxy}
 }
 
+func NewCatalogHandler(tlsConfig *tls.Config) handler {
+	target, proxy := createReverseProxy("http://localhost:8080")
+
+	proxy.Transport = &http.Transport{
+		TLSClientConfig: tlsConfig,
+	}
+
+	return handler{target: target, proxy: proxy}
+}
+
 func UnimplementedHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
