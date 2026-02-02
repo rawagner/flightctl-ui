@@ -10,6 +10,7 @@ import {
 import { ImageBuildList } from '@flightctl/types/imagebuilder';
 
 import { AnnotationType, GenericCondition, GenericConditionType } from '../types/extraTypes';
+import { CatalogItemList } from '@flightctl/types/alpha';
 
 export type ApiList =
   | EnrollmentRequestList
@@ -17,7 +18,8 @@ export type ApiList =
   | FleetList
   | RepositoryList
   | ResourceSyncList
-  | ImageBuildList;
+  | ImageBuildList
+  | CatalogItemList;
 
 const getApiListCount = (listResponse: ApiList | undefined): number | undefined => {
   if (listResponse === undefined) {

@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {
   Brand,
+  Drawer,
+  DrawerContent,
+  DrawerContentBody,
   Masthead,
   MastheadBrand,
   MastheadContent,
@@ -32,6 +35,7 @@ import AppToolbar from './AppToolbar';
 const AppLayoutContent = () => {
   const { t } = useTranslation();
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   const { mustShowOrganizationSelector } = useOrganizationGuardContext();
 
@@ -97,22 +101,28 @@ const AppLayoutContent = () => {
     </SkipToContent>
   );
   return (
-    <Page
-      mainContainerId={pageId}
-      masthead={Header}
-      sidebar={Sidebar}
-      isManagedSidebar
-      skipToContent={PageSkipToContent}
-    >
-      {mustShowOrganizationSelector ? (
-        <OrganizationSelector isFirstLogin />
-      ) : (
-        <>
-          <PageNavigation />
-          <Outlet />
-        </>
-      )}
-    </Page>
+    <Drawer isExpanded={isDrawerOpen}>
+      <DrawerContent panelContent={<div />}>
+        <DrawerContentBody>
+          <Page
+            mainContainerId={pageId}
+            masthead={Header}
+            sidebar={Sidebar}
+            isManagedSidebar
+            skipToContent={PageSkipToContent}
+          >
+            {mustShowOrganizationSelector ? (
+              <OrganizationSelector isFirstLogin />
+            ) : (
+              <>
+                <PageNavigation />
+                <Outlet />
+              </>
+            )}
+          </Page>
+        </DrawerContentBody>
+      </DrawerContent>
+    </Drawer>
   );
 };
 

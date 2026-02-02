@@ -1,0 +1,39 @@
+apiVersion: flightctl.io/v1alpha1
+kind: CatalogItem
+metadata:
+  name: kube-prometheus-stack
+  labels:
+    category: monitoring
+  catalog: edge-apps
+spec:
+  displayName: Kube Prometheus Stack
+  shortDescription: Full Kubernetes monitoring stack
+  visibility: published
+  provider: Prometheus Community
+  support: https://prometheus-community.github.io/helm-charts
+
+  category: application
+  type: helm
+  reference:
+    uri: quay.io/prometheus-community/kube-prometheus-stack
+
+  versions:
+    - version: "56.0.0"
+      tag: "56.0.0"
+      channels: [fast]
+      replaces: "55.0.0"
+    - version: "55.0.0"
+      tag: "55.0.0"
+      channels: [stable, fast]
+      replaces: "54.0.0"
+    - version: "54.0.0"
+      tag: "54.0.0"
+      channels: [stable]
+
+  defaults:
+    config:
+      namespace: monitoring
+      values:
+        prometheus:
+          prometheusSpec:
+            retention: 15d

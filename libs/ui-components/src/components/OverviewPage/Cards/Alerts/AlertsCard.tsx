@@ -115,6 +115,7 @@ const resourceKindLabel = (t: TFunction, resourceKind: ResourceKind | undefined)
     case ResourceKind.TEMPLATE_VERSION:
       return t('Template version');
     case ResourceKind.AUTH_PROVIDER:
+    default:
       return t('Authentication provider');
   }
 };

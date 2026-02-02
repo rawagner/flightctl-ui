@@ -1,0 +1,34 @@
+apiVersion: flightctl.io/v1alpha1
+kind: CatalogItem
+metadata:
+  name: llama-2
+  labels:
+    category: ai
+  catalog: edge-apps
+spec:
+  displayName: Llama 2
+  shortDescription: Meta's open-source large language model
+  visibility: published
+  provider: Meta
+  homepage: https://llama.meta.com
+
+  category: application
+  type: data
+  reference:
+    uri: quay.io/models/llama-2
+
+  # For AI models, channels represent model variants (size/quantization)
+  versions:
+    - version: "2.0.0-7b-q4"
+      tag: 7b-q4
+      channels: [7b]
+    - version: "2.0.0-13b-q4"
+      tag: 13b-q4
+      channels: [13b]
+    - version: "2.0.0-70b-q4"
+      tag: 70b-q4
+      channels: [70b]
+
+  defaults:
+    config:
+      mountPath: /models

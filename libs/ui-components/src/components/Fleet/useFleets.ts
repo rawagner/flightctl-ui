@@ -15,6 +15,7 @@ type FleetsEndpointArgs = {
   name?: string;
   nextContinue?: string;
   addDevicesSummary?: boolean;
+  limit?: number;
 };
 
 export const useFleetBackendFilters = () => {
@@ -49,13 +50,15 @@ const getFleetsEndpoint = ({
   name,
   addDevicesSummary,
   nextContinue,
+  limit,
 }: {
   name?: string;
   addDevicesSummary?: boolean;
   nextContinue?: string;
+  limit?: number;
 }) => {
   const params = new URLSearchParams({
-    limit: `${PAGE_SIZE}`,
+    limit: `${limit ?? PAGE_SIZE}`,
   });
   if (name) {
     params.set('fieldSelector', `metadata.name contains ${name}`);
@@ -82,6 +85,7 @@ export type FleetLoad = {
   isUpdating: boolean;
   refetch: VoidFunction;
   pagination: PaginationDetails<FleetList>;
+  hasMore: boolean;
 };
 
 export const useFleets = (args: FleetsEndpointArgs): FleetLoad => {
@@ -93,6 +97,7 @@ export const useFleets = (args: FleetsEndpointArgs): FleetLoad => {
     },
     pagination.onPageFetched,
   );
+  const hasMore = !!fleetsList?.metadata?.continue || (fleetsList?.metadata?.remainingItemCount ?? 0) > 0;
   return {
     fleets: fleetsList?.items || [],
     isLoading,
@@ -100,5 +105,6 @@ export const useFleets = (args: FleetsEndpointArgs): FleetLoad => {
     isUpdating: updating || fleetsDebouncing,
     refetch,
     pagination,
+    hasMore,
   };
 };

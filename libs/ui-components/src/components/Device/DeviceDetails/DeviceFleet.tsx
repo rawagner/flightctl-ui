@@ -78,7 +78,7 @@ const DeviceFleet = ({ device }: { device?: Device }) => {
     return '-';
   }
 
-  const multipleOwnersCondition = getCondition(device.status?.conditions, ConditionType.DeviceMultipleOwners);
+  const multipleOwnersCondition = false;
   let fleetNameEl: React.ReactNode = null;
   const fleetName = getDeviceFleet(device.metadata);
   if (fleetName) {

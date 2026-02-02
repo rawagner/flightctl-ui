@@ -45,14 +45,23 @@ export const fetchUiProxy = async (endpoint: string, requestInit: RequestInit): 
   return await fetch(`${uiProxyAPI}/${endpoint}`, options);
 };
 
-const getFullApiUrl = (path: string): { api: 'flightctl' | 'imagebuilder' | 'alerts'; url: string } => {
+const getFullApiUrl = (path: string): { api: 'flightctl' | 'imagebuilder' | 'alerts' | 'catalog'; url: string } => {
   if (path.startsWith('alerts')) {
     return { api: 'alerts', url: `${uiProxyAPI}/alerts/api/v2/${path}` };
   }
   if (imageBuilderPathRegex.test(path)) {
     return { api: 'imagebuilder', url: `${uiProxyAPI}/imagebuilder/api/v1/${path}` };
   }
-  return { api: 'flightctl', url: `${flightCtlAPI}/api/v1/${path}` };
+  if (path.startsWith('catalogs') || path.startsWith('catalogitems')) {
+    return {
+      api: 'catalog',
+      url: `${flightCtlAPI}/api/v1/${path}`,
+    };
+  }
+  return {
+    api: 'flightctl',
+    url: `${flightCtlAPI}/api/${path.startsWith('v1beta1') || path.startsWith('v1alpha1') ? `${path}` : `v1/${path}`}`,
+  };
 };
 
 export const logout = async () => {

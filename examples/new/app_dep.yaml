@@ -1,0 +1,21 @@
+apiVersion: flightctl.io/v1alpha1
+kind: CatalogItem
+metadata:
+  name: nginx-old
+  catalog: edge-apps
+spec:
+  displayName: NGINX (Legacy)
+  shortDescription: Legacy NGINX - use nginx-plus instead
+  visibility: published
+  deprecation:
+    message: "This item is deprecated. Use nginx-plus for better performance and support."
+    replacement: nginx-plus
+
+  category: application
+  type: container
+  reference:
+    uri: quay.io/nginx/nginx-legacy
+  versions:
+    - version: "1.20.0"
+      tag: "1.20.0"
+      channels: [stable]

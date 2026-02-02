@@ -13,8 +13,15 @@ import { useField } from 'formik';
 import ErrorHelperText, { DefaultHelperText } from './FieldHelperText';
 
 import './FormSelect.css';
+import { t } from 'i18next';
 
-type SelectItem = { label: string; description?: string };
+export type SelectItem = {
+  label: string;
+  description?: string;
+  isDisabled?: boolean;
+  value: unknown;
+  valueToKey: (val: unknown) => string;
+};
 
 type FormSelectProps = {
   name: string;
@@ -24,11 +31,35 @@ type FormSelectProps = {
   placeholderText?: string;
   isValidTypedItem?: (value: string) => boolean;
   transformTypedItem?: (value: string) => string;
+  /** Called when input value changes. When provided, client-side filtering is disabled (use for backend filtering). */
+  onInputChange?: (value: string) => void;
+  emptyOptionLabel?: string;
 };
 
 const isItemObject = (item: string | SelectItem): item is SelectItem => typeof item === 'object';
 
 const getItemLabel = (item: string | SelectItem) => (isItemObject(item) ? item.label : item);
+
+const getItemValue = (key: string, item: string | SelectItem): unknown => (isItemObject(item) ? item.value : key);
+
+const findItemByStoredValue = (
+  items: Record<string, string | SelectItem>,
+  storedValue: unknown,
+): { key: string; item: string | SelectItem } | undefined => {
+  if (storedValue) {
+    for (const key of Object.keys(items)) {
+      const item = items[key];
+      if (isItemObject(item)) {
+        if (item.valueToKey(storedValue) === key) {
+          return { key, item };
+        }
+      } else if (key === storedValue) {
+        return { key, item };
+      }
+    }
+  }
+  return undefined;
+};
 
 const FormSelectTypeahead = ({
   name,
@@ -38,7 +69,9 @@ const FormSelectTypeahead = ({
   placeholderText,
   isValidTypedItem,
   transformTypedItem,
+  onInputChange,
   children,
+  emptyOptionLabel,
 }: React.PropsWithChildren<FormSelectProps>) => {
   const [field, meta, { setValue, setTouched }] = useField<string>({
     name: name,
@@ -64,23 +97,29 @@ const FormSelectTypeahead = ({
   React.useEffect(() => {
     const hasOneItem = itemKeys.length === 1;
     if (hasOneItem && !currentValue) {
-      setValue(itemKeys[0], true);
+      const key = itemKeys[0];
+      const item = items[key];
+      setValue(getItemValue(key, item) as string, true);
     }
-  }, [itemKeys, currentValue, setValue]);
+  }, [itemKeys, items, currentValue, setValue]);
 
   let selectedText = defaultValue;
   if (inputValue) {
     selectedText = inputValue;
   } else if (currentValue) {
-    selectedText = getItemLabel(items[currentValue]) || currentValue;
+    const found = findItemByStoredValue(items, currentValue);
+    selectedText = found ? getItemLabel(found.item) : currentValue;
   }
 
-  const itemKeysFiltered = itemKeys.filter((key) => {
-    if (!inputValue) {
-      return true;
-    }
-    return getItemLabel(items[key]).toLowerCase().includes(inputValue.toLowerCase());
-  });
+  // When onInputChange is provided, skip client-side filtering (backend filtering mode)
+  const itemKeysFiltered = onInputChange
+    ? itemKeys
+    : itemKeys.filter((key) => {
+        if (!inputValue) {
+          return true;
+        }
+        return getItemLabel(items[key]).toLowerCase().includes(inputValue.toLowerCase());
+      });
 
   const setActiveAndFocusedItem = (itemIndex: number) => {
     setFocusedItemIndex(itemIndex);
@@ -132,8 +171,10 @@ const FormSelectTypeahead = ({
       case 'Enter':
         if (isOpen && focusedItem) {
           event.preventDefault();
+          const item = items[focusedItem];
+          const valueToStore = getItemValue(focusedItem, item);
           setTouched(true);
-          setValue(focusedItem, true);
+          setValue(valueToStore as string, true);
           setInputValue(undefined);
           setIsOpen(false);
           resetActiveAndFocusedItem();
@@ -160,10 +201,12 @@ const FormSelectTypeahead = ({
       <Select
         id={fieldId}
         className="fctl-form-select"
-        selected={currentValue || defaultId}
-        onSelect={(_, value) => {
+        selected={findItemByStoredValue(items, currentValue)?.key || defaultId}
+        onSelect={(_, selectedKey) => {
+          const item = items[selectedKey as string];
+          const valueToStore = getItemValue(selectedKey as string, item);
           setTouched(true);
-          setValue(value as string, true);
+          setValue(valueToStore as string, true);
           setInputValue(undefined);
           setIsOpen(false);
           resetActiveAndFocusedItem();
@@ -195,6 +238,7 @@ const FormSelectTypeahead = ({
                 }}
                 onChange={(_, value) => {
                   setInputValue(value || undefined);
+                  onInputChange?.(value || '');
                   resetActiveAndFocusedItem();
                   if (!isOpen) {
                     setIsOpen(true);
@@ -249,22 +293,28 @@ const FormSelectTypeahead = ({
         }}
       >
         <SelectList className="fctl-form-select__menu" id={`${fieldId}-listbox`}>
-          {itemKeysFiltered.map((key, index) => {
-            const item = items[key];
-            const desc = isItemObject(item) ? item.description : undefined;
-            return (
-              <SelectOption
-                className="fctl-form-select__item"
-                key={key}
-                value={key}
-                description={desc}
-                isFocused={focusedItemIndex === index}
-                id={`${fieldId}-${key}`}
-              >
-                {getItemLabel(item)}
-              </SelectOption>
-            );
-          })}
+          {itemKeysFiltered.length ? (
+            itemKeysFiltered.map((key, index) => {
+              const item = items[key];
+              const desc = isItemObject(item) ? item.description : undefined;
+              return (
+                <SelectOption
+                  className="fctl-form-select__item"
+                  key={key}
+                  value={key}
+                  description={desc}
+                  isFocused={focusedItemIndex === index}
+                  id={`${fieldId}-${key}`}
+                >
+                  {getItemLabel(item)}
+                </SelectOption>
+              );
+            })
+          ) : (
+            <SelectOption isDisabled className="fctl-form-select__item">
+              {emptyOptionLabel ?? t<string>('Not found')}
+            </SelectOption>
+          )}
         </SelectList>
         {children}
       </Select>
@@ -287,7 +337,8 @@ const FormSelectTypeaheadWrapper = ({
   if (isDisabled) {
     let displayText: string = '';
     if (value) {
-      displayText = getItemLabel(items[value]) || value;
+      const found = findItemByStoredValue(items, value);
+      displayText = found ? getItemLabel(found.item) : value;
     } else if (rest.defaultId) {
       displayText = getItemLabel(items[rest.defaultId]) || rest.defaultId;
     }

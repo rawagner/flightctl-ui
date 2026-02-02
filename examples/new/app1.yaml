@@ -1,0 +1,16 @@
+apiVersion: flightctl.io/v1alpha1
+kind: CatalogItem
+metadata:
+  name: nginx
+  catalog: edge-apps
+spec:
+  category: application
+  type: container
+  reference:
+    uri: quay.io/nginx/nginx
+  # version = semver (required, used for upgrade graph)
+  # tag = image tag (can differ, e.g., v-prefix, aliases like "latest")
+  versions:
+    - version: "1.25.0"      # semver - no v prefix
+      tag: "v1.25.0"         # image tag - can have v prefix
+      channels: [stable]

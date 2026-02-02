@@ -1,0 +1,31 @@
+apiVersion: flightctl.io/v1alpha1
+kind: CatalogItem
+metadata:
+  name: redis
+  catalog: edge-apps
+spec:
+  displayName: Redis
+  shortDescription: In-memory data store
+  visibility: published
+
+  category: application
+  type: container
+  reference:
+    uri: quay.io/redis/redis
+
+  # oneOf: each version has either tag OR digest, not both
+  versions:
+    - version: "7.4.0"
+      digest: "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"  # pinned by digest
+      channels: [stable, fast]
+      replaces: "7.2.0"
+    - version: "7.2.0"
+      tag: "7.2.0"              # referenced by tag
+      channels: [stable]
+      deprecation:
+        message: "Security vulnerability CVE-2024-1234. Upgrade to 7.4.0."
+
+  defaults:
+    config:
+      envVars:
+        REDIS_MAXMEMORY: 256mb
