@@ -36,7 +36,7 @@ const MoreVersions = ({ updates }: { updates: CatalogItemVersion[] }) => {
           );
         }}
       >
-        <Button variant="secondary" className="fctl-channel-more-versions" onClick={() => {}}>
+        <Button variant="secondary" className="fctl-channel-more-versions">
           {t('+ More')}
         </Button>
       </Popover>

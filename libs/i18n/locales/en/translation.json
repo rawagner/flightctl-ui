@@ -318,6 +318,7 @@
   "Deploy to all devices in a fleet": "Deploy to all devices in a fleet",
   "Existing Device": "Existing Device",
   "Deploy to a single fleetless device": "Deploy to a single fleetless device",
+  "The Operating system does not contain any additional formats beside bootc": "The Operating system does not contain any additional formats beside bootc",
   "New Device": "New Device",
   "Provision a brand new, unenrolled device": "Provision a brand new, unenrolled device",
   "Update configuration successful": "Update configuration successful",
