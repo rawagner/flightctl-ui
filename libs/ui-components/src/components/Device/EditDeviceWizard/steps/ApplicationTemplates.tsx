@@ -95,9 +95,9 @@ const ApplicationSection = ({
         </FormGroup>
 
         {isContainer ? (
-          <ApplicationContainerForm index={index} isReadOnly={isReadOnly} />
+          <ApplicationContainerForm appFieldName={appFieldName} isReadOnly={isReadOnly} />
         ) : isHelm ? (
-          <ApplicationHelmForm index={index} isReadOnly={isReadOnly} />
+          <ApplicationHelmForm appFieldName={appFieldName} isReadOnly={isReadOnly} />
         ) : (
           <>
             <FormGroupWithHelperText

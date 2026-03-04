@@ -10,41 +10,52 @@ import UploadField from '../../../form/UploadField';
 import { useTranslation } from '../../../../hooks/useTranslation';
 import { AppSpecType, HelmAppForm } from '../../../../types/deviceSpec';
 
-const ApplicationHelmForm = ({ index, isReadOnly }: { index: number; isReadOnly?: boolean }) => {
+const ApplicationHelmForm = ({
+  appFieldName,
+  isReadOnly,
+  showIdentityFields = true,
+}: {
+  appFieldName: string;
+  isReadOnly?: boolean;
+  showIdentityFields?: boolean;
+}) => {
   const { t } = useTranslation();
-  const appFieldName = `applications[${index}]`;
   const [{ value: app }] = useField<HelmAppForm>(`${appFieldName}`);
   const valuesFiles = app.valuesFiles || [];
   const canAddValuesFile = valuesFiles && valuesFiles.every((file) => file && file.trim() !== '');
 
   return (
     <Grid hasGutter>
-      <FormGroup label={t('Application name')}>
-        <TextField aria-label={t('Application name')} name={`${appFieldName}.name`} isDisabled={isReadOnly} />
-      </FormGroup>
+      {showIdentityFields && (
+        <>
+          <FormGroup label={t('Application name')}>
+            <TextField aria-label={t('Application name')} name={`${appFieldName}.name`} isDisabled={isReadOnly} />
+          </FormGroup>
 
-      {/* Field not configurable - just to display helm apps like the other app types that have OCI image references */}
-      <Radio
-        id={`${appFieldName}-helm-app-spec-type`}
-        name={`${appFieldName}-helm-app-spec-type`}
-        label={t('OCI reference URL')}
-        value={AppSpecType.OCI_IMAGE}
-        isDisabled={isReadOnly}
-        isChecked
-      />
+          {/* Field not configurable - just to display helm apps like the other app types that have OCI image references */}
+          <Radio
+            id={`${appFieldName}-helm-app-spec-type`}
+            name={`${appFieldName}-helm-app-spec-type`}
+            label={t('OCI reference URL')}
+            value={AppSpecType.OCI_IMAGE}
+            isDisabled={isReadOnly}
+            isChecked
+          />
 
-      <FormGroupWithHelperText
-        label={t('Image')}
-        content={t('Reference to the OCI image or artifact containing the Helm chart.')}
-        isRequired
-      >
-        <TextField
-          aria-label={t('Image')}
-          name={`${appFieldName}.image`}
-          isDisabled={isReadOnly}
-          helperText={t('Provide a valid image reference')}
-        />
-      </FormGroupWithHelperText>
+          <FormGroupWithHelperText
+            label={t('Image')}
+            content={t('Reference to the OCI image or artifact containing the Helm chart.')}
+            isRequired
+          >
+            <TextField
+              aria-label={t('Image')}
+              name={`${appFieldName}.image`}
+              isDisabled={isReadOnly}
+              helperText={t('Provide a valid image reference')}
+            />
+          </FormGroupWithHelperText>
+        </>
+      )}
 
       <FormGroupWithHelperText label={t('Namespace')} content={t('The namespace to install the Helm chart into.')}>
         <TextField

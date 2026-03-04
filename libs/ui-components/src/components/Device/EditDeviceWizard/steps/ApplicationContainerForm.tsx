@@ -12,9 +12,16 @@ import { PortMapping, SingleContainerAppForm } from '../../../../types/deviceSpe
 
 import './ApplicationContainerForm.css';
 
-const ApplicationContainerForm = ({ index, isReadOnly }: { index: number; isReadOnly?: boolean }) => {
+const ApplicationContainerForm = ({
+  appFieldName,
+  isReadOnly,
+  showIdentityFields = true,
+}: {
+  appFieldName: string;
+  isReadOnly?: boolean;
+  showIdentityFields?: boolean;
+}) => {
   const { t } = useTranslation();
-  const appFieldName = `applications[${index}]`;
   const [{ value: app }] = useField<SingleContainerAppForm>(`${appFieldName}`);
   const { setFieldValue, setFieldTouched } = useFormikContext();
   const ports = React.useMemo(() => app.ports || [], [app.ports]);
@@ -154,20 +161,24 @@ const ApplicationContainerForm = ({ index, isReadOnly }: { index: number; isRead
 
   return (
     <Grid hasGutter>
-      <FormGroupWithHelperText
-        label={t('Application name')}
-        content={t('If not specified, the image name will be used. Application name must be unique.')}
-      >
-        <TextField aria-label={t('Application name')} name={`${appFieldName}.name`} isDisabled={isReadOnly} />
-      </FormGroupWithHelperText>
-      <FormGroup label={t('Image')} isRequired>
-        <TextField
-          aria-label={t('Image')}
-          name={`${appFieldName}.image`}
-          isDisabled={isReadOnly}
-          helperText={t('Provide a valid image reference')}
-        />
-      </FormGroup>
+      {showIdentityFields && (
+        <>
+          <FormGroupWithHelperText
+            label={t('Application name')}
+            content={t('If not specified, the image name will be used. Application name must be unique.')}
+          >
+            <TextField aria-label={t('Application name')} name={`${appFieldName}.name`} isDisabled={isReadOnly} />
+          </FormGroupWithHelperText>
+          <FormGroup label={t('Image')} isRequired>
+            <TextField
+              aria-label={t('Image')}
+              name={`${appFieldName}.image`}
+              isDisabled={isReadOnly}
+              helperText={t('Provide a valid image reference')}
+            />
+          </FormGroup>
+        </>
+      )}
 
       <FormGroup label={t('Ports')}>
         <small>{t('Provide a list of ports to map to the container')}</small>

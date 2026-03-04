@@ -39,6 +39,7 @@ type EditWizardProps = {
   error: unknown;
   resourceId: string;
   isDevice: boolean;
+  resourceName?: string;
 };
 
 const EditWizard = ({
@@ -50,6 +51,7 @@ const EditWizard = ({
   loading,
   resourceId,
   isDevice,
+  resourceName,
 }: EditWizardProps) => {
   const [isSuccess, setIsSuccess] = React.useState(false);
   const { t } = useTranslation();
@@ -175,7 +177,7 @@ const EditWizard = ({
           </BreadcrumbItem>
           <BreadcrumbItem>
             <Link to={{ route: isDevice ? ROUTE.DEVICE_DETAILS : ROUTE.FLEET_DETAILS, postfix: resourceId }}>
-              {resourceId}
+              {resourceName || resourceId}
             </Link>
           </BreadcrumbItem>
           <BreadcrumbItem>
@@ -249,6 +251,7 @@ export const EditDeviceWizard = () => {
       loading={loading}
       specPath="/"
       resourceId={deviceId}
+      resourceName={device?.metadata.labels?.alias}
       isDevice
     />
   );
